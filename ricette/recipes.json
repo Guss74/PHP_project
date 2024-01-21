@@ -1,0 +1,4 @@
+[
+    {"name": "Pasta Carbonara", "ingredients": ["Spaghetti", "Guanciale", "Uova", "Pecorino "], "instructions": "ss."},
+    {"name": "Margherita Pizza", "ingredients": ["Pizza", "salsa pomodoro", "Mozzarella ", "Basilico"], "instructions": "sa."}
+]
