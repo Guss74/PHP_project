@@ -11,7 +11,6 @@ if (file_exists($usersFile)) {
     $users = json_decode(file_get_contents($usersFile), true);
 }
 
-
 // Per registrarsi
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
     $username = $_POST['username'];
@@ -60,7 +59,7 @@ function isUserAuthenticated()
 }
 
 // parte ricetta
-if (isUserAuthenticated() && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_recipe'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_recipe'])) {
     $recipeName = $_POST['recipe_name'];
     $ingredients = explode(',', $_POST['ingredients']);
     $instructions = $_POST['instructions'];
@@ -100,10 +99,10 @@ if (isUserAuthenticated() && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_PO
 }
 
 // Aggiunta della parte per rimuovere le ricette
-if (isUserAuthenticated() && isset($_POST['remove_recipe'])) {
+if (isUserAuthenticated() && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove_recipe'])) {
     $recipeIndex = $_POST['recipe_index'];
 
-    // Rimuovi la ricetta dall'array
+    // Rimuovi la ricetta solo se l'utente attuale è quello che l'ha postata
     foreach ($users as &$user) {
         if ($user['username'] === $_SESSION['username']) {
             if (isset($user['recipes'][$recipeIndex])) {
@@ -125,16 +124,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
     $commentText = $_POST['comment_text'];
 
     foreach ($users as &$user) {
-        foreach ($user['recipes'] as &$recipe) {
+        foreach ($user['recipes'] as $recipeIndexUser => &$recipe) {
             if (
                 isset($recipe['comments']) && is_array($recipe['comments']) &&
-                $recipeIndex === array_search($recipe, $user['recipes'], true)
+                $recipeIndex == $recipeIndexUser
             ) {
                 $recipe['comments'][] = [
                     'user' => $_SESSION['username'],
                     'comment' => $commentText,
                 ];
-                break;
+                break 2; // Break due livelli per uscire dai due loop
             }
         }
     }
@@ -185,6 +184,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
             color: #fff; /* Bianco */
         }
 
+        .comment-container {
+            background-color: #444; /* Grigio scuro leggermente più chiaro */
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .comment {
+            margin: 5px 0;
+            color: #fff; /* Bianco */
+        }
+
         form {
             margin-top: 20px;
             clear: both;
@@ -223,78 +234,119 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
     <p>Ciao <?php echo $_SESSION['username']; ?>! <a href="?logout">Logout</a></p>
     <h2>Tue Ricette</h2>
 
-    <?php foreach ($users as $user): ?>
-        <?php if ($user['username'] === $_SESSION['username']): ?>
-            <div class="recipe-container">
-            <?php foreach ($user['recipes'] as $recipeIndex => $recipe): ?>
-    <div class="recipe-box">
-        <h3><?php echo $recipe['name']; ?></h3>
-        <p>Ingredients: <?php echo implode(', ', $recipe['ingredients']); ?></p>
-        <p>Instructions: <?php echo $recipe['instructions']; ?></p>
-        <?php if (!empty($recipe['image'])): ?>
-            <img src="<?php echo $recipe['image']; ?>" alt="Recipe Image" style="max-width: 100%;">
-        <?php endif; ?>
+    <div class="recipe-container">
+        <?php foreach ($users as $user): ?>
+            <?php if ($user['username'] === $_SESSION['username']): ?>
+                <?php foreach ($user['recipes'] as $recipeIndex => $recipe): ?>
+                    <div class="recipe-box">
+                        <h3><?php echo $recipe['name']; ?></h3>
+                        <p>Ingredients: <?php echo implode(', ', $recipe['ingredients']); ?></p>
+                        <p>Instructions: <?php echo $recipe['instructions']; ?></p>
+                        <?php if (!empty($recipe['image'])): ?>
+                            <img src="<?php echo $recipe['image']; ?>" alt="Recipe Image" style="max-width: 100%;">
+                        <?php endif; ?>
 
-        <!-- Aggiunta della sezione dei commenti -->
-        <div>
-            <h4>Commenti:</h4>
-            <?php if (isset($recipe['comments']) && is_array($recipe['comments'])): ?>
-                <?php foreach ($recipe['comments'] as $comment): ?>
-                    <p><strong><?php echo $comment['user']; ?>:</strong> <?php echo $comment['comment']; ?></p>
+                        <!-- Aggiunta della sezione dei commenti -->
+                        <div class="comment-container">
+                            <h4>Commenti:</h4>
+                            <?php if (isset($recipe['comments']) && is_array($recipe['comments'])): ?>
+                                <?php foreach ($recipe['comments'] as $comment): ?>
+                                    <p class="comment"><strong><?php echo $comment['user']; ?>:</strong> <?php echo $comment['comment']; ?></p>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Aggiunta del modulo per aggiungere commenti -->
+                        <form action="index.php" method="POST">
+                            <input type="hidden" name="recipe_index" value="<?php echo $recipeIndex; ?>">
+                            <label for="comment_text">Aggiungi commento:</label>
+                            <textarea name="comment_text" required></textarea><br>
+                            <input type="submit" name="add_comment" value="Aggiungi Commento">
+                        </form>
+
+                        <!-- Aggiunta del modulo per rimuovere la ricetta -->
+                        <form action="index.php" method="POST">
+                            <input type="hidden" name="recipe_index" value="<?php echo $recipeIndex; ?>">
+                            <input type="submit" name="remove_recipe" value="Remove Recipe">
+                        </form>
+                    </div>
                 <?php endforeach; ?>
             <?php endif; ?>
-        </div>
-
-        <!-- Aggiunta del modulo per aggiungere commenti -->
-        <form action="index.php" method="POST">
-            <input type="hidden" name="recipe_index" value="<?php echo $recipeIndex; ?>">
-            <label for="comment_text">Aggiungi commento:</label>
-            <textarea name="comment_text" required></textarea><br>
-            <input type="submit" name="add_comment" value="Aggiungi Commento">
-        </form>
-
-        <form action="index.php" method="POST">
-            <input type="hidden" name="recipe_index" value="<?php echo $recipeIndex; ?>">
-            <input type="submit" name="remove_recipe" value="Remove Recipe">
-        </form>
+        <?php endforeach; ?>
     </div>
-<?php endforeach; ?>
 
-            </div>
-        <?php endif; ?>
-    <?php endforeach; ?>
 
 <?php else: ?>
     <p><a href="register.php">Register</a> or <a href="login.php">Login</a> per aggiungere ricette</p>
 <?php endif; ?>
 
-    <h2>Lista Ricette</h2>
-    <?php foreach ($recipes as $recipe): ?>
-        <div class="recipe-box">
-            <h3><?php echo $recipe['name']; ?></h3>
-            <p>Ingredients: <?php echo implode(', ', $recipe['ingredients']); ?></p>
-            <p>Instructions: <?php echo $recipe['instructions']; ?></p>
-        </div>
+
+<h2>Lista Ricette</h2>
+
+<div class="recipe-container">
+    <?php foreach ($users as $user): ?>
+        <?php foreach ($user['recipes'] as $recipeIndex => $recipe): ?>
+            <div class="recipe-box">
+                <h3><?php echo $recipe['name']; ?></h3>
+                <p>Ingredients: <?php echo implode(', ', $recipe['ingredients']); ?></p>
+                <p>Instructions: <?php echo $recipe['instructions']; ?></p>
+                <?php if (!empty($recipe['image'])): ?>
+                    <img src="<?php echo $recipe['image']; ?>" alt="Recipe Image" style="max-width: 100%;">
+                <?php endif; ?>
+
+                <!-- Aggiunta della sezione dei commenti -->
+                <div class="comment-container">
+                    <h4>Commenti:</h4>
+                    <?php if (isset($recipe['comments']) && is_array($recipe['comments'])): ?>
+                        <?php foreach ($recipe['comments'] as $comment): ?>
+                            <p class="comment"><strong><?php echo $comment['user']; ?>:</strong> <?php echo $comment['comment']; ?></p>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Aggiunta del modulo per aggiungere commenti -->
+                <form action="index.php" method="POST">
+                    <input type="hidden" name="recipe_index" value="<?php echo $recipeIndex; ?>">
+                    <label for="comment_text">Aggiungi commento:</label>
+                    <textarea name="comment_text" required></textarea><br>
+                    <input type="submit" name="add_comment" value="Aggiungi Commento">
+                </form>
+
+                <!-- Aggiunta del modulo per rimuovere la ricetta -->
+                <?php if (isUserAuthenticated() && $user['username'] === $_SESSION['username']): ?>
+                    <form action="index.php" method="POST">
+                        <input type="hidden" name="recipe_index" value="<?php echo $recipeIndex; ?>">
+                        <input type="submit" name="remove_recipe" value="Remove Recipe">
+                    </form>
+                <?php endif; ?>
+                
+            </div>
+        <?php endforeach; ?>
     <?php endforeach; ?>
+</div>
 
-    <?php if (isUserAuthenticated()): ?>
-        <h2>Aggiungi nuova ricetta</h2>
-        <form action="index.php" method="POST" enctype="multipart/form-data">
-            <label for="recipe_name">Ricetta</label>
-            <input type="text" name="recipe_name" required><br>
+<!-- Aggiungi nuova ricetta -->
+<?php if (isUserAuthenticated()): ?>
+    <h2>Aggiungi nuova ricetta</h2>
+    <form action="index.php" method="POST" enctype="multipart/form-data">
+        <label for="recipe_name">Ricetta</label>
+        <input type="text" name="recipe_name" required><br>
 
-            <label for="ingredients">Ingredienti :</label>
-            <input type="text" name="ingredients" required><br>
+        <label for="ingredients">Ingredienti :</label>
+        <input type="text" name="ingredients" required><br>
 
-            <label for="instructions">Istruzioni:</label>
-            <textarea name="instructions" required></textarea><br>
+        <label for="instructions">Istruzioni:</label>
+        <textarea name="instructions" required></textarea><br>
 
-            <!-- Aggiungi questa parte al form -->
-            <label for="recipe_image">Foto Ricetta:</label>
-            <input type="file" name="recipe_image" accept="image/*"><br>
+        <!-- Aggiungi questa parte al form -->
+        <label for="recipe_image">Foto Ricetta:</label>
+        <input type="file" name="recipe_image" accept="image/*"><br>
 
-            <input type="submit" name="add_recipe" value="Add Recipe">
-        </form>
-    <?php endif; ?>
+        <input type="submit" name="add_recipe" value="Add Recipe">
+    </form>
+<?php endif; ?>
+
+
+
 </body>
 </html>
