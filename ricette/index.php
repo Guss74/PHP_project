@@ -144,7 +144,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
     exit;
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -275,12 +274,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
         <?php endforeach; ?>
     </div>
 
-
 <?php else: ?>
     <p><a href="register.php">Register</a> or <a href="login.php">Login</a> per aggiungere ricette</p>
 <?php endif; ?>
-
-
 <h2>Lista Ricette</h2>
 
 <div class="recipe-container">
@@ -325,7 +321,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
     <?php endforeach; ?>
 </div>
 
-<!-- Aggiungi nuova ricetta -->
 <?php if (isUserAuthenticated()): ?>
     <h2>Aggiungi nuova ricetta</h2>
     <form action="index.php" method="POST" enctype="multipart/form-data">
@@ -338,15 +333,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
         <label for="instructions">Istruzioni:</label>
         <textarea name="instructions" required></textarea><br>
 
-        <!-- Aggiungi questa parte al form -->
+        
         <label for="recipe_image">Foto Ricetta:</label>
         <input type="file" name="recipe_image" accept="image/*"><br>
 
         <input type="submit" name="add_recipe" value="Add Recipe">
     </form>
 <?php endif; ?>
-
-
-
 </body>
 </html>
