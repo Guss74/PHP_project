@@ -266,7 +266,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
                         <!-- Aggiunta del modulo per rimuovere la ricetta -->
                         <form action="index.php" method="POST">
                             <input type="hidden" name="recipe_index" value="<?php echo $recipeIndex; ?>">
-                            <input type="submit" name="remove_recipe" value="Remove Recipe">
+                            <input type="submit" name="remove_recipe" value="Rimuovi Ricetta">
+                        </form>
+                        
+                        <!-- Aggiunta del modulo per modificare la ricetta -->
+                        <form action="edit_recipe.php" method="POST">
+                            <input type="hidden" name="recipe_index" value="<?php echo $recipeIndex; ?>">
+                            <input type="submit" name="edit_recipe" value="Modifica Ricetta">
                         </form>
                     </div>
                 <?php endforeach; ?>
@@ -275,8 +281,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
     </div>
 
 <?php else: ?>
-    <p><a href="register.php">Register</a> or <a href="login.php">Login</a> per aggiungere ricette</p>
+    <p><a href="register.php">Registrati</a> o <a href="login.php">Accedi</a> per aggiungere ricette</p>
 <?php endif; ?>
+
 <h2>Lista Ricette</h2>
 
 <div class="recipe-container">
@@ -307,14 +314,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
                     <textarea name="comment_text" required></textarea><br>
                     <input type="submit" name="add_comment" value="Aggiungi Commento">
                 </form>
+                <!-- Aggiunta del link "Modifica Ricetta" per ogni ricetta -->
+                <a href="modifica_ricetta.php?recipe_index=<?php echo $recipeIndex; ?>">Modifica Ricetta</a>
 
-                <!-- Aggiunta del modulo per rimuovere la ricetta -->
-                <?php if (isUserAuthenticated() && $user['username'] === $_SESSION['username']): ?>
-                    <form action="index.php" method="POST">
-                        <input type="hidden" name="recipe_index" value="<?php echo $recipeIndex; ?>">
-                        <input type="submit" name="remove_recipe" value="Remove Recipe">
-                    </form>
-                <?php endif; ?>
+
+                
                 
             </div>
         <?php endforeach; ?>
@@ -337,8 +341,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
         <label for="recipe_image">Foto Ricetta:</label>
         <input type="file" name="recipe_image" accept="image/*"><br>
 
-        <input type="submit" name="add_recipe" value="Add Recipe">
+        <input type="submit" name="add_recipe" value="Aggiungi Ricetta">
     </form>
+    <form action="search.php" method="GET">
+    <input type="text" name="query" placeholder="Cerca ricette...">
+    <button type="submit">Cerca</button>
+</form>
 <?php endif; ?>
 </body>
 </html>
