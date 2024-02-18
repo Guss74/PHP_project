@@ -1,48 +1,42 @@
 <?php
 session_start();
 
-$recipeIndex = isset($_GET['recipe_index']) ? $_GET['recipe_index'] : null;
+$recipesFile = 'recipes.json';
+$users = json_decode(file_get_contents('users.json'), true);
 
-if ($recipeIndex === null) {
-    // Gestisci il caso in cui non sia stato fornito un indice di ricetta valido
+if (!isset($_SESSION['username'])) {
     header('Location: index.php');
     exit;
 }
 
-// Recupera la ricetta da modificare
-$recipeToEdit = null;
+$recipeIndex = isset($_GET['recipe_index']) ? $_GET['recipe_index'] : null;
+$recipe = null;
 
-foreach ($users as $user) {
-    if ($user['username'] === $_SESSION['username']) {
-        if (isset($user['recipes'][$recipeIndex])) {
-            $recipeToEdit = $user['recipes'][$recipeIndex];
-            break;
-        }
+foreach ($users as &$user) {
+    if ($user['username'] === $_SESSION['username'] && isset($user['recipes'][$recipeIndex])) {
+        $recipe = $user['recipes'][$recipeIndex];
+        break;
     }
 }
 
-if ($recipeToEdit === null) {
-    // Gestisci il caso in cui la ricetta da modificare non sia stata trovata
+if (!$recipe) {
     header('Location: index.php');
     exit;
 }
 
-// Processa il form di modifica quando viene inviato
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_recipe'])) {
-    // Recupera i dati dal form
-    $updatedRecipeName = $_POST['recipe_name'];
-    $updatedIngredients = explode(',', $_POST['ingredients']);
-    $updatedInstructions = $_POST['instructions'];
+    // Ricevi i dati inviati dal modulo di modifica
+    $recipe['name'] = $_POST['recipe_name'];
+    $recipe['ingredients'] = explode(',', $_POST['ingredients']);
+    $recipe['instructions'] = $_POST['instructions'];
 
-    // Aggiorna i dati della ricetta
-    $users[$_SESSION['username']]['recipes'][$recipeIndex]['name'] = $updatedRecipeName;
-    $users[$_SESSION['username']]['recipes'][$recipeIndex]['ingredients'] = $updatedIngredients;
-    $users[$_SESSION['username']]['recipes'][$recipeIndex]['instructions'] = $updatedInstructions;
+    // Aggiorna la ricetta nell'array degli utenti
+    $users[array_search($_SESSION['username'], array_column($users, 'username'))]['recipes'][$recipeIndex] = $recipe;
 
-    // Salva le modifiche nel file JSON
-    file_put_contents($usersFile, json_encode($users));
-    
-    // Reindirizza alla pagina delle ricette
+    // Salva le modifiche nel file JSON degli utenti
+    file_put_contents('users.json', json_encode($users));
+
+    // Reindirizza alla home
     header('Location: index.php');
     exit;
 }
@@ -55,59 +49,92 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_recipe'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modifica Ricetta</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #222; /* Nero antracite */
-            color: #fff; /* Bianco */
-        }
+    
+    body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #222; /* Nero antracite */
+    color: #fff; /* Bianco */
+}
 
-        form {
-            margin-top: 20px;
-            clear: both;
-            width: 50%;
-        }
+.form-container {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #333; /* Grigio scuro */
+    color: #fff; /* Bianco */
+    width: 50%;
+    max-width: 600px;
+}
 
-        form label,
-        form input,
-        form textarea {
-            display: block;
-            margin-bottom: 10px;
-            width: 100%;
-            color: #fff; /* Bianco */
-        }
+.form-container label,
+.form-container input,
+.form-container textarea {
+    display: block;
+    margin-bottom: 10px;
+    width: 100%;
+    color: #fff; /* Bianco */
+    border: 1px solid #666; /* Grigio scuro */
+    background-color: #444; /* Grigio scuro leggermente più chiaro */
+    padding: 8px;
+    border-radius: 4px;
+}
 
-        form input[type="submit"] {
-            background-color: #1E90FF; /* Colore modificato */
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: auto;
-        }
+.form-container textarea {
+    resize: vertical; /* Per consentire il ridimensionamento verticale */
+    min-height: 100px; /* Altezza minima della textarea */
+}
 
-        form input[type="submit"]:hover {
-            background-color: #104e8b; /* Colore leggermente più scuro in hover */
-        }
-    </style>
+.form-container input[type="submit"],
+.form-container button[type="submit"] {
+    background-color: #1E90FF; /* Colore modificato */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: auto;
+}
+
+.form-container input[type="submit"]:hover,
+.form-container button[type="submit"]:hover {
+    background-color: #104e8b; /* Colore leggermente più scuro in hover */
+}
+.btn-primary {
+    background-color: #1E90FF; /* Colore modificato */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #104e8b; /* Colore leggermente più scuro in hover */
+}
+
+/* Aggiungi altri stili secondo necessità */
+
+</style>
 </head>
 <body>
+    <h2>Modifica Ricetta</h2>
+    <form action="modifica_ricetta.php?recipe_index=<?php echo $recipeIndex; ?>" method="POST">
+        <label for="recipe_name">Ricetta</label>
+        <input type="text" name="recipe_name" value="<?php echo $recipe['name']; ?>" required><br>
 
-<h2>Modifica Ricetta</h2>
+        <label for="ingredients">Ingredienti :</label>
+        <input type="text" name="ingredients" value="<?php echo implode(', ', $recipe['ingredients']); ?>" required><br>
 
-<form action="modifica_ricetta.php?recipe_index=<?php echo $recipeIndex; ?>" method="POST">
-    <label for="recipe_name">Nome Ricetta:</label>
-    <input type="text" name="recipe_name" value="<?php echo $recipeToEdit['name']; ?>" required><br>
+        <label for="instructions">Istruzioni:</label>
+        <textarea name="instructions" required><?php echo $recipe['instructions']; ?></textarea><br>
 
-    <label for="ingredients">Ingredienti:</label>
-    <input type="text" name="ingredients" value="<?php echo implode(', ', $recipeToEdit['ingredients']); ?>" required><br>
-
-    <label for="instructions">Istruzioni:</label>
-    <textarea name="instructions" required><?php echo $recipeToEdit['instructions']; ?></textarea><br>
-
-    <input type="submit" name="update_recipe" value="Salva Modifiche">
-</form>
-
+        <input type="submit" name="update_recipe" value="Salva Modifiche">
+    </form>
 </body>
 </html>
