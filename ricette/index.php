@@ -151,6 +151,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ricette</title>
     <style>
+        textarea {
+        color: black !important;
+    } 
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
@@ -165,6 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
         p {
             margin-top: 0;
         }
+        
 
         .recipe-container {
             display: flex;
@@ -185,14 +189,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
         }
         .btn {
     background-color: #1E90FF; /* Colore modificato */
-    color: white;
+    color: black;
     padding: 10px 15px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     width: auto;
 }
+.edit-button {
+        color: black !important;
+    }
 
+    /* Regola specifica per i bottoni "Modifica Ricetta" all'interno delle form */
+    form .edit-button {
+        color: black !important;
+    }
 .btn:hover {
     background-color: #104e8b; /* Colore leggermente più scuro in hover */
 }
@@ -250,6 +261,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
         form input[type="submit"]:hover {
             background-color: #104e8b; /* Colore leggermente più scuro in hover */
         }
+        textarea {
+        color: black !important;
+    }
+    form textarea {
+        color: black !important;
+    }
+    input {
+        color: black !important;
+    }
+
+    
+    form input {
+        color: black !important;
+    }
       
 
 
@@ -344,10 +369,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
                     <input type="submit" name="add_comment" value="Aggiungi Commento">
                 </form>
                 <!-- Aggiunta del modulo per modificare la ricetta -->
-<form action="modifica_ricetta.php" method="GET">
-    <input type="hidden" name="recipe_index" value="<?php echo $recipeIndex; ?>">
-    <button type="submit" name="edit_recipe" class="btn btn-primary">Modifica Ricetta</button>
-</form>
+    <form action="modifica_ricetta.php" method="GET">
+        <input type="hidden" name="recipe_index" value="<?php echo $recipeIndex; ?>">
+        <button type="submit" name="edit_recipe" class="btn btn-primary">Modifica Ricetta</button>
+    </form>
 
 
 

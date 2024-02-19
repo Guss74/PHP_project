@@ -50,77 +50,123 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_recipe'])) {
     <title>Modifica Ricetta</title>
     <style>
     
+    
     body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #222; /* Nero antracite */
-    color: #fff; /* Bianco */
-}
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #222; /* Nero antracite */
+        color: #fff; /* Bianco */
+    }
 
-.form-container {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    background-color: #333; /* Grigio scuro */
-    color: #fff; /* Bianco */
-    width: 50%;
-    max-width: 600px;
-}
+    h2 {
+        margin-bottom: 10px;
+    }
 
-.form-container label,
-.form-container input,
-.form-container textarea {
-    display: block;
-    margin-bottom: 10px;
-    width: 100%;
-    color: #fff; /* Bianco */
-    border: 1px solid #666; /* Grigio scuro */
-    background-color: #444; /* Grigio scuro leggermente più chiaro */
-    padding: 8px;
-    border-radius: 4px;
-}
+    p {
+        margin-top: 0;
+    }
 
-.form-container textarea {
-    resize: vertical; /* Per consentire il ridimensionamento verticale */
-    min-height: 100px; /* Altezza minima della textarea */
-}
+    .recipe-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
 
-.form-container input[type="submit"],
-.form-container button[type="submit"] {
-    background-color: #1E90FF; /* Colore modificato */
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    width: auto;
-}
+    .edit-button {
+        background-color: #1E90FF;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
 
-.form-container input[type="submit"]:hover,
-.form-container button[type="submit"]:hover {
-    background-color: #104e8b; /* Colore leggermente più scuro in hover */
-}
-.btn-primary {
-    background-color: #1E90FF; /* Colore modificato */
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
+    .edit-button:hover {
+        background-color: #104e8b;
+    }
 
-.btn-primary:hover {
-    background-color: #104e8b; /* Colore leggermente più scuro in hover */
+    .btn {
+        background-color: #1E90FF; /* Colore modificato */
+        color: black;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: auto;
+    }
+
+    .btn:hover {
+        background-color: #104e8b; /* Colore leggermente più scuro in hover */
+    }
+
+    .recipe-box {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 10px;
+        width: calc(33.33% - 20px); /* 33.33% width for each box with a 20px gap */
+        box-sizing: border-box;
+        margin-bottom: 20px;
+        background-color: #333; /* Grigio scuro */
+        color: #fff; /* Bianco */
+    }
+
+    .comment-container {
+        background-color: #444; /* Grigio scuro leggermente più chiaro */
+        padding: 10px;
+        border-radius: 8px;
+        margin-top: 10px;
+    }
+
+    .comment {
+        margin: 5px 0;
+        color: #fff; /* Bianco */
+    }
+
+    form {
+        margin-top: 20px;
+        clear: both;
+        width: 100%;
+    }
+
+    form label,
+    form input,
+    form textarea {
+        display: block;
+        margin-bottom: 10px;
+        width: 100%;
+        color: #fff; /* Bianco */
+    }
+
+    form textarea {
+        min-height: 150px; /* Altezza minima di 150px per textarea */
+    }
+
+    form input[type="submit"],
+    form button[type="submit"] {
+        background-color: #1E90FF; /* Colore modificato */
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: auto;
+    }
+
+    form input[type="submit"]:hover,
+    form button[type="submit"]:hover {
+        background-color: #104e8b; /* Colore leggermente più scuro in hover */
+    }
+    textarea {
+        color: black !important;
+    }
+    form input[type="text"],
+form input[type="password"],
+form textarea {
+    color: black; /* Cambia il colore del testo negli input e nelle textarea */
 }
-
-/* Aggiungi altri stili secondo necessità */
-
 </style>
+
+
 </head>
 <body>
     <h2>Modifica Ricetta</h2>
