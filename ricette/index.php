@@ -11,7 +11,7 @@ if (file_exists($usersFile)) {
     $users = json_decode(file_get_contents($usersFile), true);
 }
 
-// Per registrarsi
+// registrarsi
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
     $username = $_POST['username'];
     $email = $_POST['email'];
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
     exit;
 }
 
-// Per effettuare il login
+//login
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     exit;
 }
 
-// Per effettuare il logout
+//logout
 if (isset($_GET['logout'])) {
     session_destroy();
     header('Location: index.php');
@@ -64,45 +64,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_recipe'])) {
     $ingredients = explode(',', $_POST['ingredients']);
     $instructions = $_POST['instructions'];
 
-    // Dopo la parte di gestione degli ingredienti e delle istruzioni
+    
     $recipeImage = '';
 
-    // Verifica se è stata caricata un'immagine
+    // controlla se ha caricato la foto
     if (isset($_FILES['recipe_image']) && $_FILES['recipe_image']['error'] === UPLOAD_ERR_OK) {
-        $uploadDir = 'uploads/'; // Assicurati di creare questa cartella nel tuo progetto
+        $uploadDir = 'uploads/'; 
         $uploadFile = $uploadDir . basename($_FILES['recipe_image']['name']);
 
-        // Sposta l'immagine nella cartella di upload
+        // Sposta l'immagine
         move_uploaded_file($_FILES['recipe_image']['tmp_name'], $uploadFile);
 
         $recipeImage = $uploadFile;
     }
 
-    // Aggiungi il percorso dell'immagine alla tua ricetta
+    // percorso dell'immagine
     foreach ($users as &$user) {
         if ($user['username'] === $_SESSION['username']) {
             $user['recipes'][] = [
                 'name' => $recipeName,
                 'ingredients' => $ingredients,
                 'instructions' => $instructions,
-                'image' => $recipeImage, // Aggiungi questo campo
-                'comments' => [], // Inizializza l'array dei commenti
+                'image' => $recipeImage, 
+                'comments' => [], 
             ];
             break;
         }
     }
 
-    // Salva le modifiche nel file JSON
+    
     file_put_contents($usersFile, json_encode($users));
     header('Location: index.php');
     exit;
 }
 
-// Aggiunta della parte per rimuovere le ricette
+// rimozione ricetta 
 if (isUserAuthenticated() && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove_recipe'])) {
     $recipeIndex = $_POST['recipe_index'];
 
-    // Rimuovi la ricetta solo se l'utente attuale è quello che l'ha postata
+    // Rimuove la ricetta se è l'utente che la messa 
     foreach ($users as &$user) {
         if ($user['username'] === $_SESSION['username']) {
             if (isset($user['recipes'][$recipeIndex])) {
@@ -112,13 +112,13 @@ if (isUserAuthenticated() && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_PO
         }
     }
 
-    // Salva le modifiche nel file JSON
+    // Salva
     file_put_contents($usersFile, json_encode($users));
     header('Location: index.php');
     exit;
 }
 
-// Aggiunta della parte per aggiungere commenti alle ricette
+//commenti alle ricette
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
     $recipeIndex = $_POST['recipe_index'];
     $commentText = $_POST['comment_text'];
@@ -133,12 +133,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
                     'user' => $_SESSION['username'],
                     'comment' => $commentText,
                 ];
-                break 2; // Break due livelli per uscire dai due loop
+                break 2; 
             }
         }
     }
 
-    // Salva le modifiche nel file JSON
+    // Salva le modifiche
     file_put_contents($usersFile, json_encode($users));
     header('Location: index.php');
     exit;
@@ -157,8 +157,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            background-color: #222; /* Nero antracite */
-            color: #fff; /* Bianco */
+            background-color: #222; 
+            color: #fff; 
         }
 
         h2 {
@@ -188,7 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
         background-color: #104e8b;
         }
         .btn {
-    background-color: #1E90FF; /* Colore modificato */
+    background-color: #1E90FF; 
     color: black;
     padding: 10px 15px;
     border: none;
@@ -200,12 +200,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
         color: black !important;
     }
 
-    /* Regola specifica per i bottoni "Modifica Ricetta" all'interno delle form */
+    
     form .edit-button {
         color: black !important;
     }
 .btn:hover {
-    background-color: #104e8b; /* Colore leggermente più scuro in hover */
+    background-color: #104e8b;
 }
 
 
@@ -214,15 +214,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
             border: 1px solid #ddd;
             border-radius: 8px;
             padding: 10px;
-            width: calc(33.33% - 20px); /* 33.33% width for each box with a 20px gap */
+            width: calc(33.33% - 20px); 
             box-sizing: border-box;
             margin-bottom: 20px;
-            background-color: #333; /* Grigio scuro */
-            color: #fff; /* Bianco */
+            background-color: #333; 
+            color: #fff; 
         }
 
         .comment-container {
-            background-color: #444; /* Grigio scuro leggermente più chiaro */
+            background-color: #444; 
             padding: 10px;
             border-radius: 8px;
             margin-top: 10px;
@@ -230,7 +230,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
 
         .comment {
             margin: 5px 0;
-            color: #fff; /* Bianco */
+            color: #fff; 
         }
 
         form {
@@ -245,11 +245,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
             display: block;
             margin-bottom: 10px;
             width: 100%;
-            color: #fff; /* Bianco */
+            color: #fff; 
         }
 
         form input[type="submit"] {
-            background-color: #1E90FF; /* Colore modificato */
+            background-color: #1E90FF; 
             color: white;
             padding: 10px 15px;
             border: none;
@@ -259,7 +259,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
         }
 
         form input[type="submit"]:hover {
-            background-color: #104e8b; /* Colore leggermente più scuro in hover */
+            background-color: #104e8b; 
         }
         textarea {
         color: black !important;
@@ -276,9 +276,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
         color: black !important;
     }
       
-
-
-        /* Aggiungi altri stili secondo necessità */
     </style>
 </head>
 <body>
@@ -299,7 +296,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
                             <img src="<?php echo $recipe['image']; ?>" alt="Recipe Image" style="max-width: 100%;">
                         <?php endif; ?>
 
-                        <!-- Aggiunta della sezione dei commenti -->
+                        <!--commenti -->
                         <div class="comment-container">
                             <h4>Commenti:</h4>
                             <?php if (isset($recipe['comments']) && is_array($recipe['comments'])): ?>
@@ -309,20 +306,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
                             <?php endif; ?>
                         </div>
 
-                        <!-- Aggiunta del modulo per aggiungere commenti -->
+                        <!--aggiungere commenti -->
                         <form action="index.php" method="POST">
                             <input type="hidden" name="recipe_index" value="<?php echo $recipeIndex; ?>">
                             <label for="comment_text">Aggiungi commento:</label>
                             <textarea name="comment_text" required></textarea><br>
                             <input type="submit" name="add_comment" value="Aggiungi Commento">
                         </form>
+                        
 
-                        <!-- Aggiunta del modulo per rimuovere la ricetta -->
+                        <!--rimuovere la ricetta -->
                         <form action="index.php" method="POST">
                             <input type="hidden" name="recipe_index" value="<?php echo $recipeIndex; ?>">
                             <input type="submit" name="remove_recipe" value="Rimuovi Ricetta">
                         </form>
-                        <!-- Aggiunta del modulo per modificare la ricetta -->
+                        <!-- modificare la ricetta -->
 <form action="modifica_ricetta.php" method="GET">
     <input type="hidden" name="recipe_index" value="<?php echo $recipeIndex; ?>">
     <button type="submit" name="edit_recipe" class="btn btn-primary">Modifica Ricetta</button>
@@ -351,7 +349,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
                     <img src="<?php echo $recipe['image']; ?>" alt="Recipe Image" style="max-width: 100%;">
                 <?php endif; ?>
 
-                <!-- Aggiunta della sezione dei commenti -->
+                <!--commenti -->
                 <div class="comment-container">
                     <h4>Commenti:</h4>
                     <?php if (isset($recipe['comments']) && is_array($recipe['comments'])): ?>
@@ -361,14 +359,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
                     <?php endif; ?>
                 </div>
 
-                <!-- Aggiunta del modulo per aggiungere commenti -->
+                <!-- aggiungere commenti -->
                 <form action="index.php" method="POST">
                     <input type="hidden" name="recipe_index" value="<?php echo $recipeIndex; ?>">
                     <label for="comment_text">Aggiungi commento:</label>
                     <textarea name="comment_text" required></textarea><br>
                     <input type="submit" name="add_comment" value="Aggiungi Commento">
                 </form>
-                <!-- Aggiunta del modulo per modificare la ricetta -->
+                <!-- modificare la ricetta -->
     <form action="modifica_ricetta.php" method="GET">
         <input type="hidden" name="recipe_index" value="<?php echo $recipeIndex; ?>">
         <button type="submit" name="edit_recipe" class="btn btn-primary">Modifica Ricetta</button>

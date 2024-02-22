@@ -22,12 +22,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
                     'user' => $_SESSION['username'],
                     'comment' => $commentText,
                 ];
-                break 2; // Break due livelli per uscire dai due loop
+                break 2; 
             }
         }
     }
 
-    // Salva le modifiche nel file JSON
+
     file_put_contents($usersFile, json_encode($users));
     header('Location: index.php');
     exit;
@@ -43,8 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            background-color: #222; /* Nero antracite */
-            color: #fff; /* Bianco */
+            background-color: #222;
+            color: #fff; 
         }
 
         form {
@@ -59,11 +59,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
             display: block;
             margin-bottom: 10px;
             width: 100%;
-            color: #fff; /* Bianco */
+            color: #fff; 
         }
 
         form input[type="submit"] {
-            background-color: #1E90FF; /* Colore modificato */
+            background-color: #1E90FF; 
             color: white;
             padding: 10px 15px;
             border: none;
@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
         }
 
         form input[type="submit"]:hover {
-            background-color: #104e8b; /* Colore leggermente più scuro in hover */
+            background-color: #104e8b; 
         }
     </style>
 </head>

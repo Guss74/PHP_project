@@ -1,16 +1,12 @@
 <?php
-// Carica gli utenti e le loro ricette dal file JSON
 $usersFile = 'users.json';
 $users = json_decode(file_get_contents($usersFile), true);
-
-// Inizializza un array per i risultati della ricerca
 $searchResults = [];
 
-// Verifica se è stata inviata una query di ricerca
 if (isset($_GET['query'])) {
-    $query = strtolower($_GET['query']); // Converti la query in minuscolo per una corrispondenza case-insensitive
+    $query = strtolower($_GET['query']); 
 
-    // Cerca tutte le ricette degli utenti che contengono la query nel nome o nelle istruzioni
+    
     foreach ($users as $user) {
         foreach ($user['recipes'] as $recipe) {
             if (stripos($recipe['name'], $query) !== false || stripos($recipe['instructions'], $query) !== false) {
@@ -31,8 +27,8 @@ if (isset($_GET['query'])) {
         body {
     font-family: Arial, sans-serif;
     margin: 20px;
-    background-color: #222; /* Nero antracite */
-    color: #fff; /* Bianco */
+    background-color: #222; 
+    color: #fff; 
 }
 
 h2 {
@@ -53,15 +49,15 @@ p {
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 10px;
-    width: calc(33.33% - 20px); /* 33.33% width for each box with a 20px gap */
+    width: calc(33.33% - 20px); 
     box-sizing: border-box;
     margin-bottom: 20px;
-    background-color: #333; /* Grigio scuro */
-    color: #fff; /* Bianco */
+    background-color: #333; 
+    color: #fff; 
 }
 
 .comment-container {
-    background-color: #444; /* Grigio scuro leggermente più chiaro */
+    background-color: #444; 
     padding: 10px;
     border-radius: 8px;
     margin-top: 10px;
@@ -69,7 +65,7 @@ p {
 
 .comment {
     margin: 5px 0;
-    color: #fff; /* Bianco */
+    color: #fff; 
 }
 
 form {
@@ -84,11 +80,11 @@ form textarea {
     display: block;
     margin-bottom: 10px;
     width: 100%;
-    color: #fff; /* Bianco */
+    color: #fff; 
 }
 
 form input[type="submit"] {
-    background-color: #1E90FF; /* Colore modificato */
+    background-color: #1E90FF; 
     color: white;
     padding: 10px 15px;
     border: none;
@@ -98,7 +94,7 @@ form input[type="submit"] {
 }
 
 form input[type="submit"]:hover {
-    background-color: #104e8b; /* Colore leggermente più scuro in hover */
+    background-color: #104e8b; 
 }
 
     </style>
@@ -112,7 +108,6 @@ form input[type="submit"]:hover {
         <ul>
             <?php foreach ($searchResults as $result): ?>
                 <li><?php echo $result['name']; ?></li>
-                <!-- Aggiungi ulteriori dettagli della ricetta se necessario -->
             <?php endforeach; ?>
         </ul>
     <?php else: ?>
@@ -133,7 +128,7 @@ form input[type="submit"]:hover {
                         <img src="<?php echo $result['image']; ?>" alt="Recipe Image" style="max-width: 100%;">
                     <?php endif; ?>
 
-                    <!-- Aggiunta della sezione dei commenti -->
+                    <!--commenti -->
                     <div class="comment-container">
                         <h4>Commenti:</h4>
                         <?php if (isset($result['comments']) && is_array($result['comments'])): ?>

@@ -8,13 +8,13 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            background-color: #222; /* Nero antracite */
-            color: #fff; /* Bianco */
+            background-color: #222; 
+            color: #fff; 
         }
 
         h2 {
             margin-bottom: 10px;
-            color: #fff; /* Bianco */
+            color: #fff; 
         }
 
         form {
@@ -28,15 +28,15 @@
             display: block;
             margin-bottom: 10px;
             width: 100%;
-            color: #333; /* Grigio scuro */
-            background-color: #555; /* Grigio più chiaro dello sfondo */
+            color: #333; 
+            background-color: #555; 
             padding: 10px;
             border: none;
             border-radius: 4px;
         }
 
         form input[type="submit"] {
-            background-color: #1E90FF; /* Azzurrino */
+            background-color: #1E90FF; 
             color: white;
             padding: 10px 15px;
             border: none;
@@ -46,7 +46,7 @@
         }
 
         form input[type="submit"]:hover {
-            background-color: #007acc; /* Azzurro più scuro al passaggio del mouse */
+            background-color: #007acc; 
         }
     </style>
 </head>

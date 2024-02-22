@@ -25,18 +25,17 @@ if (!$recipe) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_recipe'])) {
-    // Ricevi i dati inviati dal modulo di modifica
     $recipe['name'] = $_POST['recipe_name'];
     $recipe['ingredients'] = explode(',', $_POST['ingredients']);
     $recipe['instructions'] = $_POST['instructions'];
 
-    // Aggiorna la ricetta nell'array degli utenti
+    // Aggiorna 
     $users[array_search($_SESSION['username'], array_column($users, 'username'))]['recipes'][$recipeIndex] = $recipe;
 
-    // Salva le modifiche nel file JSON degli utenti
+    // Salva 
     file_put_contents('users.json', json_encode($users));
 
-    // Reindirizza alla home
+    // manda indietro
     header('Location: index.php');
     exit;
 }
@@ -54,8 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_recipe'])) {
     body {
         font-family: Arial, sans-serif;
         margin: 20px;
-        background-color: #222; /* Nero antracite */
-        color: #fff; /* Bianco */
+        background-color: #222; 
+        color: #fff; 
     }
 
     h2 {
@@ -86,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_recipe'])) {
     }
 
     .btn {
-        background-color: #1E90FF; /* Colore modificato */
+        background-color: #1E90FF; 
         color: black;
         padding: 10px 15px;
         border: none;
@@ -96,22 +95,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_recipe'])) {
     }
 
     .btn:hover {
-        background-color: #104e8b; /* Colore leggermente più scuro in hover */
+        background-color: #104e8b; 
     }
 
     .recipe-box {
         border: 1px solid #ddd;
         border-radius: 8px;
         padding: 10px;
-        width: calc(33.33% - 20px); /* 33.33% width for each box with a 20px gap */
+        width: calc(33.33% - 20px); 
         box-sizing: border-box;
         margin-bottom: 20px;
-        background-color: #333; /* Grigio scuro */
-        color: #fff; /* Bianco */
+        background-color: #333; 
+        color: #fff; 
     }
 
     .comment-container {
-        background-color: #444; /* Grigio scuro leggermente più chiaro */
+        background-color: #444; 
         padding: 10px;
         border-radius: 8px;
         margin-top: 10px;
@@ -119,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_recipe'])) {
 
     .comment {
         margin: 5px 0;
-        color: #fff; /* Bianco */
+        color: #fff; 
     }
 
     form {
@@ -134,16 +133,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_recipe'])) {
         display: block;
         margin-bottom: 10px;
         width: 100%;
-        color: #fff; /* Bianco */
+        color: #fff; 
     }
 
     form textarea {
-        min-height: 150px; /* Altezza minima di 150px per textarea */
+        min-height: 150px;
     }
 
     form input[type="submit"],
     form button[type="submit"] {
-        background-color: #1E90FF; /* Colore modificato */
+        background-color: #1E90FF; 
         color: white;
         padding: 10px 15px;
         border: none;
@@ -154,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_recipe'])) {
 
     form input[type="submit"]:hover,
     form button[type="submit"]:hover {
-        background-color: #104e8b; /* Colore leggermente più scuro in hover */
+        background-color: #104e8b; 
     }
     textarea {
         color: black !important;
@@ -162,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_recipe'])) {
     form input[type="text"],
 form input[type="password"],
 form textarea {
-    color: black; /* Cambia il colore del testo negli input e nelle textarea */
+    color: black; 
 }
 </style>
 
